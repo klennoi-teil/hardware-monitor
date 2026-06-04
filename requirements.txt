@@ -6,3 +6,5 @@ pywin32>=305
 win10toast>=0.9
 pystray>=0.19
 pillow>=10.0
+customtkinter>=5.2
+matplotlib>=3.8

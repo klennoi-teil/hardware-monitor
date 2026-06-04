@@ -1,5 +1,6 @@
 ﻿param(
     [switch]$Agent,
+    [switch]$Gui,
     [switch]$Install,
     [switch]$Uninstall,
     [switch]$Status
@@ -20,6 +21,8 @@ if ($Install) {
     & $py "$dir\monitor_agent.py" --status
 } elseif ($Agent) {
     & $py "$dir\monitor_agent.py" @args
+} elseif ($Gui) {
+    & $py "$dir\main.py" --gui @args
 } else {
     & $py "$dir\main.py" @args
 }

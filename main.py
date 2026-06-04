@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-"""Hardware Monitor  live terminal dashboard for PC temperature & resource tracking."""
+﻿#!/usr/bin/env python3
+"""Hardware Monitor — live terminal dashboard & GUI window."""
 
 from __future__ import annotations
 
@@ -10,14 +10,15 @@ import sys
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="  Hardware Monitor  live terminal dashboard",
+        description="Hardware Monitor — live terminal dashboard & GUI window",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  hardware-monitor
-  hardware-monitor --interval 1 --theme dark
+  hardware-monitor                  # terminal dashboard
+  hardware-monitor --gui            # GUI window
+  hardware-monitor -i 1 --theme dark
+  hardware-monitor --gui -i 3      # GUI with 3s refresh
   hardware-monitor --log --log-interval 10
-  hardware-monitor --cpu-total-only
         """,
     )
 
@@ -28,10 +29,15 @@ Examples:
         help="Refresh interval in seconds (default: 2.0)",
     )
     parser.add_argument(
+        "--gui",
+        action="store_true",
+        help="Launch the GUI window instead of terminal dashboard",
+    )
+    parser.add_argument(
         "--theme",
         choices=("auto", "dark", "light"),
         default="auto",
-        help="Dashboard colour theme (default: auto)",
+        help="Terminal dashboard colour theme (default: auto)",
     )
     parser.add_argument(
         "--cpu-total-only",
@@ -69,14 +75,18 @@ def main() -> None:
 
     args = _parse_args()
 
-    # Merge args into a config-like dict for display
+    if args.gui:
+        from monitor.gui import run_gui
+        run_gui(interval=args.interval)
+        return
+
     from monitor import display
     from monitor.logger import CsvLogger
 
     logger_fn = None
     if args.log:
         logger_fn = CsvLogger(path=args.log_file).write
-        print(f" Logging to: {logger_fn.__self__.path}", file=sys.stderr)
+        print(f"Logging to: {logger_fn.__self__.path}", file=sys.stderr)
 
     display.run_dashboard(
         refresh_interval=args.interval,
