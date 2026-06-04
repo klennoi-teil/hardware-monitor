@@ -1,0 +1,8 @@
+﻿psutil>=5.9
+wmi>=1.5
+rich>=13.0
+colorama>=0.4
+pywin32>=305
+win10toast>=0.9
+pystray>=0.19
+pillow>=10.0
